@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <title>VIP ACCESS | Premium Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg: #030b17; 
+            --card: #0f172a; 
+            --primary: #1f80e0; 
+            --text: #ffffff; 
+            --gold: #ffcc00; 
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
+        ::-webkit-scrollbar { display: none; }
+
+        /* --- NEW: ISOLATED GHOST WEBVIEW CSS --- */
+        #full-webview { position: fixed; inset: 0; background: #000; z-index: 35000; display: none; flex-direction: column; }
+        #full-webview iframe { flex: 1; border: none; width: 100%; height: 100%; background: #000; }
+        .webview-header { height: 60px; background: #030b17; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        /* --- END GHOST WEBVIEW CSS --- */
+
+        #splash { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #splash img { max-width: 85%; border-radius: 20px; border: 2px solid var(--primary); }
+        .skip-btn { position: absolute; top: 40px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; border: 1.5px solid var(--primary); color: #fff; z-index: 10001; font-weight: bold; }
+        #m-mode-screen { position: fixed; inset: 0; background: var(--bg); z-index: 40000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
+        .navbar { padding: 15px; background: rgba(3,11,23,0.95); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: 1px; }
+        .logo span { color: var(--primary); }
+        .search-box { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 15px; display: flex; align-items: center; flex: 0.8; border: 1px solid rgba(255,255,255,0.1); }
+        .search-box input { background: none; border: none; color: #fff; width: 100%; margin-left: 10px; font-size: 0.95rem; }
+        .slider-c { width: 100%; height: 210px; overflow: hidden; margin-top: 10px; }
+        .slider-w { display: flex; transition: 0.8s ease; height: 100%; }
+        .slide { min-width: 100%; height: 100%; padding: 0 10px; cursor: pointer; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+        .cat-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 15px; position: sticky; top: 60px; background: var(--bg); z-index: 999; }
+        .cat-btn { background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 8px; white-space: nowrap; color: #fff; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; }
+        .cat-btn.active { background: #fff; color: #000; font-weight: bold; }
+        .sec-title { padding: 25px 15px 10px; font-size: 1.2rem; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .h-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 0 15px; scrollbar-width: none; }
+        .v-card { min-width: 130px; width: 130px; position: relative; cursor: pointer; }
+        .v-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; background: #161d2f; }
+        .v-title { font-size: 0.8rem; color: #fff; margin-top: 8px; display: block; font-weight: 500; }
+        .yt-feed { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .yt-card { width: 100%; cursor: pointer; }
+        .yt-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; background: #161d2f; }
+        .yt-info h3 { margin: 8px 0 0; font-size: 0.85rem; color: #fff; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        #details { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; overflow-y: auto; padding-bottom: 80px; }
+        #player-con { position: sticky; top: 0; width: 100%; aspect-ratio: 16/9; background: #000; z-index: 2100; }
+        .ad-box { width: 100%; min-height: 60px; background: #050505; margin: 15px 0; display: flex; justify-content: center; align-items: center; }
+        .p-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; color: #fff; margin-bottom: 15px; cursor: pointer; font-size: 1rem; background: var(--primary); }
+        .report-btn { width: calc(100% - 30px); margin: 15px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; color: #fff; font-size: 0.85rem; cursor: pointer; }
+        .btm-nav { position: fixed; bottom: 0; width: 100%; background: #0f172a; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
+        .nav-i { color: rgba(255,255,255,0.4); font-size: 0.7rem; text-align: center; flex: 1; }
+        .nav-i i { font-size: 1.4rem; margin-bottom: 5px; }
+        .nav-i.active { color: #fff; }
+        #search-page { display: none; position: fixed; top: 65px; left: 0; width: 100%; height: calc(100% - 65px); background: var(--bg); z-index: 900; overflow-y: auto; }
+        .hist-card { min-width: 160px; width: 160px; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; border: 1px solid #333; cursor: pointer; margin-right: 12px; display: inline-block; }
+        .hist-card img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+    <div id="m-mode-screen">
+        <i class="fas fa-sync-alt fa-spin" style="font-size:4rem; color:var(--primary); margin-bottom:20px;"></i>
+        <h1 id="m-ver-text">Update Available</h1>
+        <p id="m-msg-text">Download the latest version to continue.</p>
+        <button id="m-link-btn" class="p-btn" style="width:200px;">Download Now</button>
+    </div>
+
+    <!-- NEW FEATURE: GHOST WEBVIEW HTML BLOCK -->
+    <div id="full-webview">
+        <div class="webview-header">
+            <div onclick="closeWebview()" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <i class="fas fa-arrow-left" style="font-size: 1.4rem; color: #fff;"></i>
+                <span style="font-weight: bold; color: #fff; letter-spacing: 0.5px;">SECURE VIP STREAMING</span>
+            </div>
+            <i class="fas fa-redo-alt" onclick="refreshWebview()" style="font-size: 1.1rem; color: #666;"></i>
+        </div>
+        <div id="webview-con" style="flex: 1;"></div>
+    </div>
+    <!-- END GHOST WEBVIEW HTML -->
+
+    <div id="splash">
+        <div class="skip-btn" onclick="hideSplash()">Skip <span id="sp-time">5</span></div>
+        <img id="sp-img" onclick="splashClick()">
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">VIP<span>VIDS</span></div>
+        <div class="search-box">
+            <i class="fas fa-search" style="color:rgba(255,255,255,0.5);"></i>
+            <input id="s-in" placeholder="Search movies, shows..." onfocus="showSearch()" onkeyup="doSearch(this.value)">
+        </div>
+    </nav>
+
+    <div id="home" class="page">
+        <div class="slider-c"><div class="slider-w" id="slider"></div></div>
+        <div class="cat-scroll" id="cats"></div>
+        <div id="home-content">
+            <div class="sec-title">Premium Exclusive 💎</div>
+            <div class="h-scroll" id="prem-list"></div>
+            <div class="sec-title">Most Watched 🔥</div>
+            <div class="h-scroll" id="trend-list"></div>
+            <div class="sec-title">New Releases ✨</div>
+            <div class="h-scroll" id="latest-list"></div>
+            <div class="sec-title">Recommended For You</div>
+            <div class="yt-feed" id="main-feed"></div>
+        </div>
+    </div>
+
+    <div id="search-page"><div class="yt-feed" id="s-res"></div></div>
+
+    <div id="profile" class="page" style="display:none; padding:20px;">
+        <div style="text-align:center; padding:30px 0;">
+            <div style="width:100px;height:100px;background:var(--primary);border-radius:50%;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;font-weight:bold;">VIP</div>
+            <h2 id="p-status">Standard User</h2>
+            <p id="p-expiry" style="color:var(--primary); font-weight:bold;"></p>
+        </div>
+        <div id="history-section" style="display:none;">
+            <div class="sec-title" style="padding-left:0;">Continue Watching</div>
+            <div class="h-scroll" id="history-list" style="padding:0; overflow-y: hidden;"></div>
+            <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+        </div>
+        <button class="p-btn" style="background:#0088cc;" onclick="openExt('tg')"><i class="fab fa-telegram"></i> Join Telegram</button>
+        <button class="p-btn" style="background:var(--gold); color:#000;" onclick="openExt('free')">GET FREE VIP ACCESS</button>
+        <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); margin-top:15px;">
+            <input id="cp-code" style="width:100%; padding:14px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px; border-radius:10px;" placeholder="Enter VIP Code">
+            <button class="p-btn" style="margin:0;" onclick="redeem()">ACTIVATE VIP</button>
+        </div>
+    </div>
+
+    <div id="details">
+        <div id="player-con"></div>
+        <div style="padding:20px;">
+            <h2 id="d-title" style="margin:0; font-size:1.1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"></h2>
+            <div id="ad-box" class="ad-box"></div>
+            <button id="play-btn" class="p-btn" onclick="startVideo()">▶ PLAY HD VIDEO</button>
+            <button class="report-btn" onclick="reportVideo()">Report Dead Link</button>
+            <h3 style="margin-top:30px; color:var(--primary);">Recommended (100+)</h3>
+            <div class="yt-feed" id="related-list" style="padding:0;"></div>
+        </div>
+    </div>
+
+    <div class="btm-nav">
+        <div class="nav-i active" id="nav-home" onclick="tab('home')"><i class="fas fa-home"></i><br>Home</div>
+        <div class="nav-i" id="nav-profile" onclick="tab('profile')"><i class="fas fa-crown"></i><br>VIP</div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const cfg = { apiKey: "AIzaSyD-EuuxfvWJsKsYa_bxyJaSwk5iIW_tX-4", authDomain: "study-material-6ec20.firebaseapp.com", databaseURL: "https://study-material-6ec20-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "study-material-6ec20", storageBucket: "study-material-6ec20.firebasestorage.app", messagingSenderId: "231876217358", appId: "1:231876217358:web:7b37abcaf24c0414c44a5f" };
+        firebase.initializeApp(cfg); const db=firebase.database();
+
+        const MY_APP_VERSION = 1.0;
+        let movies=[], cur=null, isPrem=false, cat='All', settings={};
+        let uid = localStorage.getItem('vip_uid') || ('u' + Date.now());
+        localStorage.setItem('vip_uid', uid);
+        let watchedVids = JSON.parse(localStorage.getItem('watched_vids') || '[]');
+
+        window.onpopstate = () => {
+            if(document.getElementById('full-webview').style.display === 'flex') closeWebview();
+            else if(document.getElementById('details').style.display === 'block') closeD();
+            else if(document.getElementById('search-page').style.display === 'block') document.getElementById('search-page').style.display = 'none';
+            else if(document.getElementById('profile').style.display === 'block') tab('home');
+        };
+        function pushS(v) { history.pushState({view:v}, v); }
+        function shuffle(a) { let b = [...a]; for (let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
+
+        function trackUser() {
+            db.ref('users/' + uid).update({ last_active: Date.now(), is_vip: isPrem });
+            db.ref('users/' + uid).on('value', s => { if(!s.exists()) { localStorage.clear(); location.reload(); } });
+        }
+
+        db.ref('maintenance_settings').on('value', s => {
+            const d = s.val(); const screen = document.getElementById('m-mode-screen');
+            if(!d) return;
+            if (d.status === false && MY_APP_VERSION < parseFloat(d.app_version)) { 
+                document.getElementById('m-ver-text').innerText = d.version_text;
+                document.getElementById('m-msg-text').innerText = d.message;
+                document.getElementById('m-link-btn').innerText = d.btn_text;
+                document.getElementById('m-link-btn').onclick = () => { if(d.link) window.open(d.link, '_self'); };
+                screen.style.display = 'flex';
+            } else screen.style.display = 'none';
+        });
+
+        db.ref('splash_ads').once('value', s => {
+            const d = s.val(); if(d){
+                const ads = Object.values(d); const rand = ads[Math.floor(Math.random() * ads.length)];
+                document.getElementById('sp-img').src = rand.image;
+                document.getElementById('splash').style.display = 'flex';
+                window.spLink = rand.link;
+                let t = 5; const iv = setInterval(() => { t--; document.getElementById('sp-time').innerText = t; if(t<=0){ clearInterval(iv); hideSplash(); } }, 1000);
+            } else hideSplash();
+        });
+        function hideSplash(){ document.getElementById('splash').style.display='none'; }
+        function splashClick(){ if(window.spLink) window.open(window.spLink, '_self'); }
+
+        db.ref('movies').on('value', s => {
+            movies = []; const d = s.val(); if(d) for(let k in d) movies.push({...d[k], id:k});
+            render(); renderCats(); trackUser();
+        });
+
+        function renderCats(){
+            const cts = ['All', ...new Set(movies.map(m => m.category))];
+            document.getElementById('cats').innerHTML = cts.map(x => `<div class="cat-btn ${cat===x?'active':''}" onclick="setCat('${x}')">${x}</div>`).join('');
+        }
+        function setCat(x){ cat=x; render(); renderCats(); }
+
+        function render(){
+            const fd=document.getElementById('main-feed'), lt=document.getElementById('latest-list'), pm=document.getElementById('prem-list'), tr=document.getElementById('trend-list');
+            fd.innerHTML=''; lt.innerHTML=''; pm.innerHTML=''; tr.innerHTML='';
+            let unseenMovies = movies.filter(m => !watchedVids.includes(m.id));
+            db.ref('analytics/movie_views').once('value', s => {
+                const views = s.val() || {};
+                const sortedTrend = unseenMovies.sort((a,b) => (views[b.id]||0) - (views[a.id]||0)).slice(0,10);
+                sortedTrend.forEach(m => tr.innerHTML += card(m));
+            });
+            unseenMovies.slice().reverse().slice(0,10).forEach(m => lt.innerHTML += card(m));
+            unseenMovies.forEach(m => { if(m.type==='premium') pm.innerHTML += card(m); });
+            let feedData = (cat==='All') ? shuffle(unseenMovies) : shuffle(unseenMovies.filter(m => m.category === cat));
+            feedData.forEach(m => fd.innerHTML += ytCard(m));
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list'); const section = document.getElementById('history-section');
+            list.innerHTML = '';
+            if(watchedVids.length > 0) {
+                section.style.display = 'block';
+                watchedVids.forEach(id => {
+                    const m = movies.find(x => x.id === id);
+                    if(m) list.innerHTML += `<div class="hist-card" onclick="openDetails('${m.id}')"><img src="${m.poster}" referrerpolicy="no-referrer" onerror="this.src='https://i.ibb.co/L6V2Sny/placeholder.png'"></div>`;
+                });
+            }
+        }
+
+        function card(m){ return `<div class="v-card" onclick="openDetails('${m.id}')"><img src="${m.poster}" referrerpolicy="no-referrer" onerror="this.src='https://i.ibb.co/L6V2Sny/placeholder.png'"><span class="v-title">${m.title}</span></div>`; }
+        function ytCard(m){ return `<div class="yt-card" onclick="openDetails('${m.id}')"><img class="yt-thumb" src="${m.poster}" referrerpolicy="no-referrer" onerror="this.src='https://i.ibb.co/L6V2Sny/placeholder.png'"><div class="yt-info"><h3>${m.title}</h3></div></div>`; }
+
+        function openDetails(id){
+            cur = movies.find(m => m.id === id);
+            document.getElementById('d-title').innerText = cur.title;
+            document.getElementById('details').style.display = 'block';
+            document.getElementById('details').scrollTo(0,0);
+            document.getElementById('player-con').innerHTML = ''; 
+            document.getElementById('play-btn').style.display = 'block';
+            injectAd(); pushS('details');
+            if(!watchedVids.includes(id)) { watchedVids.unshift(id); if(watchedVids.length > 100) watchedVids.pop(); localStorage.setItem('watched_vids', JSON.stringify(watchedVids)); }
+            const list = document.getElementById('related-list'); list.innerHTML = '';
+            shuffle(movies.filter(m => m.id !== cur.id && !watchedVids.includes(m.id))).slice(0, 100).forEach(m => list.innerHTML += ytCard(m));
+            db.ref('analytics/movie_views/'+id).transaction(c => (c || 0) + 1);
+            db.ref('users/' + uid + '/watch_count').transaction(c => (c || 0) + 1);
+        }
+
+        /* --- NEW: ISOLATED WEBVIEW CONTROLLER --- */
+        function startVideo(){
+            if(cur.type==='premium' && !isPrem) return alert("VIP Access Required!");
+            let u = cur.video.trim();
+            // PEHCHAN: Detect Website Link vs Direct Media
+            if(u.includes('blogspot.com') || u.includes('github.io') || u.includes('html')){
+                document.getElementById('full-webview').style.display = 'flex';
+                document.getElementById('webview-con').innerHTML = `<iframe id="wb-frame" src="${u}" allow="autoplay; fullscreen"></iframe>`;
+                pushS('webview');
+            } else {
+                const pl = document.getElementById('player-con');
+                if(u.includes('dropbox.com')) u = u.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0','') + '?raw=1';
+                if(u.includes('.mp4') || u.includes('dropbox') || u.includes('pixeldrain')){
+                    if(u.includes('pixeldrain')) u = `https://pixeldrain.com/api/file/${u.split('/').pop()}`;
+                    pl.innerHTML = `<video controls autoplay playsinline style="width:100%;height:100%;"><source src="${u}" type="video/mp4"></video>`;
+                } else {
+                    u = u.replace('/f/', '/e/').replace('/d/', '/e/').replace('/v/', '/e/');
+                    pl.innerHTML = `<iframe src="${u}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+                }
+                document.getElementById('play-btn').style.display = 'none';
+            }
+        }
+        function closeWebview(){ document.getElementById('full-webview').style.display = 'none'; document.getElementById('webview-con').innerHTML = ''; }
+        function refreshWebview(){ let f = document.getElementById('wb-frame'); if(f) f.src = f.src; }
+        /* --- END WEBVIEW CONTROLLER --- */
+
+        function reportVideo(){ if(!cur) return; db.ref('reports/'+cur.id).transaction(c => (c || 0) + 1); alert("Reported!"); }
+        function closeD(){ document.getElementById('details').style.display='none'; document.getElementById('player-con').innerHTML=''; render(); }
+        function tab(id){ document.getElementById('search-page').style.display='none'; document.querySelectorAll('.page').forEach(p=>p.style.display='none'); document.getElementById(id).style.display='block'; document.querySelectorAll('.nav-i').forEach(i=>i.classList.remove('active')); const nav = document.getElementById('nav-' + id); if(nav) nav.classList.add('active'); if(id === 'profile') renderHistory(); if(id!=='home') pushS(id); }
+        function showSearch(){ document.getElementById('search-page').style.display='block'; pushS('search'); }
+        function doSearch(v){ const res = document.getElementById('s-res'); res.innerHTML = ''; if(!v) return; movies.filter(m => m.title.toLowerCase().includes(v.toLowerCase())).forEach(m => { res.innerHTML += ytCard(m); }); }
+        function redeem(){ const c = document.getElementById('cp-code').value.trim(); db.ref('coupons/'+c).once('value', s => { if(s.exists()){ localStorage.setItem('premExp', Date.now() + (s.val().hours * 3600000)); localStorage.setItem('vip_active', 'true'); db.ref('coupons/'+c).remove(); alert("VIP Activated!"); location.reload(); } }); }
+        function checkVIPSync(){ const exp = localStorage.getItem('premExp'); if(exp && Date.now() < parseInt(exp)){ isPrem = true; const hrs = Math.ceil((parseInt(exp) - Date.now()) / 3600000); document.getElementById('p-status').innerHTML = "VIP MEMBER 💎"; document.getElementById('p-status').style.color = "#ff9900"; document.getElementById('p-expiry').innerText = `Valid for: ${hrs} Hours`; } }
+        checkVIPSync(); setInterval(checkVIPSync, 60000);
+        db.ref('settings').on('value', s => { settings = s.val() || {}; });
+        function openExt(type){ const url = settings[type+'_url']; if(url) window.open(url, '_self'); }
+        function injectAd() { const box = document.getElementById('ad-box'); if(box && settings.adsterra) { box.innerHTML = settings.adsterra; Array.from(box.querySelectorAll("script")).forEach(old => { const s = document.createElement("script"); Array.from(old.attributes).forEach(a => s.setAttribute(a.name, a.value)); s.appendChild(document.createTextNode(old.innerHTML)); old.parentNode.replaceChild(s, old); }); } }
+        db.ref('promotions').on('value', s => { const d = s.val(); let h=''; if(d) for(let k in d) h += `<div class="slide" onclick="window.open('${d[k].link}','_self')"><img src="${d[k].image}"></div>`; document.getElementById('slider').innerHTML = h; let i=0; const w=document.getElementById('slider'); if(w.children.length > 1) setInterval(() => { i++; if(i>=w.children.length) i=0; w.style.transform=`translateX(-${i*100}%)`; }, 5000); });
+    </script>
+</body>
+</html>
