@@ -1,0 +1,20 @@
+{
+  "name": "VIP VIDS App",
+  "short_name": "VIPVIDS",
+  "start_url": "/vids/",
+  "display": "standalone",
+  "background_color": "#030b17",
+  "theme_color": "#030b17",
+  "icons": [
+    {
+      "src": "APKA_IBB_LOGO_LINK_YAHAN_DALEIN",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://ibb.co/svym9mpD",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
