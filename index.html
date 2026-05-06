@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- IXON FUN PWA SETTINGS -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#030b17">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="https://i.ibb.co/3Y7m4m5/icon.png">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <title>VIP ACCESS | Ultimate Pro</title>
@@ -14,64 +9,71 @@
     <style>
         :root { --bg: #030b17; --card: #0f172a; --primary: #1f80e0; --text: #fff; --gold: #ffcc00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 75px; overflow-x: hidden; }
         ::-webkit-scrollbar { display: none; }
 
-        /* Badges */
+        /* THUMBNAIL BADGES */
         .v-badge-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-        .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
         .badge-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; font-weight: bold; }
 
-        /* Ghost Webview */
+        /* GHOST WEBVIEW */
         #full-webview { position: fixed; inset: 0; background: #000; z-index: 35000; display: none; flex-direction: column; }
-        #full-webview iframe { flex: 1; border: none; background: #000; }
+        #full-webview iframe { flex: 1; border: none; background: #000; width: 100%; height: 100%; }
         .webview-header { height: 60px; background: #030b17; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--primary); }
 
-        /* Maintenance & Splash */
-        #m-mode-screen { position: fixed; inset: 0; background: var(--bg); z-index: 40000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
+        /* SPLASH & MAINTENANCE */
         #splash { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         #splash img { max-width: 85%; border-radius: 20px; border: 2px solid var(--primary); }
-        .skip-btn { position: absolute; top: 40px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; border: 1.5px solid var(--primary); color: #fff; z-index: 10001; font-weight: bold; }
+        .skip-btn { position: absolute; top: 40px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; border: 1px solid var(--primary); color: #fff; z-index: 10001; font-weight: bold; }
+        #m-mode-screen { position: fixed; inset: 0; background: var(--bg); z-index: 40000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
 
-        /* UI Components */
+        /* NAVBAR */
         .navbar { padding: 15px; background: rgba(3,11,23,0.95); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-weight: 900; font-size: 1.5rem; color: #fff; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: 1px; }
         .logo span { color: var(--primary); }
-        .search-box { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 15px; display: flex; align-items: center; flex: 0.8; }
-        .search-box input { background: none; border: none; color: #fff; width: 100%; margin-left: 10px; }
+        .search-box { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 15px; display: flex; align-items: center; flex: 0.8; border: 1px solid rgba(255,255,255,0.1); }
+        .search-box input { background: none; border: none; color: #fff; width: 100%; margin-left: 10px; font-size: 0.95rem; }
 
+        /* SLIDERS */
         .slider-c { width: 100%; height: 210px; overflow: hidden; margin-top: 10px; }
         .slider-w { display: flex; transition: 0.8s ease; height: 100%; }
         .slide { min-width: 100%; height: 100%; padding: 0 10px; cursor: pointer; }
         .slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
 
         .cat-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: var(--bg); position: sticky; top: 60px; z-index: 999; }
-        .cat-btn { background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 8px; white-space: nowrap; color: #fff; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.1); }
+        .cat-btn { background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 8px; white-space: nowrap; color: #fff; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; }
         .cat-btn.active { background: #fff; color: #000; font-weight: bold; }
 
-        /* Grid */
-        .sec-title { padding: 25px 15px 10px; font-size: 1.2rem; font-weight: bold; }
+        .sec-title { padding: 25px 15px 10px; font-size: 1.2rem; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 8px; }
         .h-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 0 15px; scrollbar-width: none; }
-        .v-card { min-width: 135px; width: 135px; position: relative; cursor: pointer; }
-        .v-card img { width: 100%; height: 185px; object-fit: cover; border-radius: 8px; background: #161d2f; }
+        
+        /* PORTRAIT CARDS */
+        .v-card { min-width: 130px; width: 130px; position: relative; cursor: pointer; }
+        .v-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; background: #161d2f; }
         .v-title { font-size: 0.8rem; color: #fff; margin-top: 8px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .yt-feed { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .yt-card { width: 100%; cursor: pointer; }
         .yt-thumb-con { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #161d2f; }
         .yt-thumb { width: 100%; height: 100%; object-fit: cover; }
-        .yt-info h3 { margin: 8px 0 0; font-size: 0.85rem; color: #fff; height: 35px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .yt-info h3 { margin: 8px 0 0; font-size: 0.85rem; color: #fff; line-height: 1.3; font-weight: 500; height: 35px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
-        /* Player Details */
+        /* PLAYER OVERLAY */
         #details { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; overflow-y: auto; padding-bottom: 80px; }
-        #player-con { position: sticky; top: 0; width: 100%; aspect-ratio: 16/9; background: #000; z-index: 2100; }
+        #player-con { position: sticky; top: 0; width: 100%; aspect-ratio: 16/9; background: #000; z-index: 2100; overflow: hidden; }
+        #player-con img { width: 100%; height: 100%; object-fit: cover; }
+
         .ad-box { width: 100%; min-height: 60px; background: #050505; margin: 15px 0; display: flex; justify-content: center; align-items: center; }
 
-        /* Buttons */
+        /* BUTTONS */
         .p-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; color: #fff; margin-bottom: 15px; cursor: pointer; background: var(--primary); }
-        .report-btn { width: calc(100% - 30px); margin: 15px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid #fff; border-radius: 10px; color: #fff; font-size: 0.85rem; cursor: pointer; text-align: center; }
+        .report-btn { width: calc(100% - 30px); margin: 15px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid #fff; border-radius: 10px; color: #fff; font-size: 0.85rem; cursor: pointer; text-align: center; font-weight: bold; }
+        .social-btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; color: #fff; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; text-transform: uppercase; }
+        .btn-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .btn-tg { background: #0088cc; }
 
-        /* Nav */
+        /* BOTTOM NAV */
         .btm-nav { position: fixed; bottom: 0; width: 100%; background: #0f172a; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
         .nav-i { color: rgba(255,255,255,0.4); font-size: 0.7rem; text-align: center; flex: 1; }
         .nav-i i { font-size: 1.4rem; margin-bottom: 5px; }
@@ -105,19 +107,20 @@
 
     <nav class="navbar">
         <div class="logo">VIP<span>VIDS</span></div>
-        <div class="search-box"><i class="fas fa-search"></i><input id="s-in" placeholder="Movies, Shows..." onfocus="showSearch()" onkeyup="doSearch(this.value)"></div>
+        <div class="search-box"><i class="fas fa-search" style="color:rgba(255,255,255,0.5);"></i><input id="s-in" placeholder="Search movies, shows..." onfocus="showSearch()" onkeyup="doSearch(this.value)"></div>
     </nav>
 
     <div id="home" class="page">
         <div class="slider-c"><div class="slider-w" id="slider"></div></div>
         <div class="cat-scroll" id="cats"></div>
         <div id="home-content">
-            <div class="sec-title">VIP Premium 💎</div>
+            <div class="sec-title">Premium Exclusive 💎</div>
             <div class="h-scroll" id="prem-list"></div>
             <div class="sec-title">Most Watched 🔥</div>
             <div class="h-scroll" id="trend-list"></div>
-            <div class="sec-title">Recently Added ✨</div>
+            <div class="sec-title">New Releases ✨</div>
             <div class="h-scroll" id="latest-list"></div>
+            <div class="sec-title">Recommended Feed</div>
             <div class="yt-feed" id="main-feed"></div>
         </div>
     </div>
@@ -135,10 +138,13 @@
             <div class="h-scroll" id="history-list" style="padding:0; overflow-y: hidden;"></div>
             <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
         </div>
-        <button class="p-btn" style="background:#0088cc;" onclick="openExt('tg')"><i class="fab fa-telegram"></i> Join Telegram</button>
-        <button class="p-btn" style="background:var(--gold); color:#000;" onclick="openExt('free')">GET FREE VIP ACCESS</button>
+        <button class="social-btn btn-ig" onclick="openExt('ig')"><i class="fab fa-instagram"></i> Follow Instagram</button>
+        <button class="social-btn btn-tg" onclick="openExt('tg')"><i class="fab fa-telegram-plane"></i> Join Telegram</button>
+        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+        <button class="p-btn" style="background:#ffd700; color:#000;" onclick="openExt('free')">GET FREE VIP ACCESS</button>
+        <button class="p-btn" style="background:#fff; color:#000;" onclick="openExt('how')">HOW TO WATCH VIDEO?</button>
         <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); margin-top:15px;">
-            <input id="cp-code" style="width:100%; padding:14px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px; border-radius:10px;" placeholder="Enter Code">
+            <input id="cp-code" style="width:100%; padding:14px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px; border-radius:10px;" placeholder="Enter VIP Code">
             <button class="p-btn" style="margin:0;" onclick="redeem()">ACTIVATE VIP</button>
         </div>
     </div>
@@ -146,7 +152,7 @@
     <div id="details">
         <div id="player-con"></div>
         <div style="padding:20px;">
-            <h2 id="d-title" style="margin:0; font-size:1.2rem;"></h2>
+            <h2 id="d-title" style="margin:0; font-size:1.1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"></h2>
             <div id="ad-box" class="ad-box"></div>
             <button id="play-btn" class="p-btn" onclick="startVideo()">WATCH NOW</button>
             <button class="report-btn" onclick="reportVideo()">Report Dead Link</button>
@@ -163,14 +169,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
-        
-const CACHE_NAME = 'ixon-fun-v1';
-self.addEventListener('install', e => {
-  self.skipWaiting();
-});
-self.addEventListener('fetch', e => {
-  e.respondWith(fetch(e.request));
-});
         const cfg = { apiKey: "AIzaSyD-EuuxfvWJsKsYa_bxyJaSwk5iIW_tX-4", authDomain: "study-material-6ec20.firebaseapp.com", databaseURL: "https://study-material-6ec20-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "study-material-6ec20", storageBucket: "study-material-6ec20.firebasestorage.app", messagingSenderId: "231876217358", appId: "1:231876217358:web:7b37abcaf24c0414c44a5f" };
         firebase.initializeApp(cfg); const db=firebase.database();
 
@@ -195,15 +193,14 @@ self.addEventListener('fetch', e => {
         }
 
         db.ref('maintenance_settings').on('value', s => {
-            const d = s.val(); const screen = document.getElementById('m-mode-screen');
-            if(!d) return;
+            const d = s.val(); if(!d) return;
             if (d.status === false && MY_APP_VERSION < parseFloat(d.app_version)) { 
                 document.getElementById('m-ver-text').innerText = d.version_text;
                 document.getElementById('m-msg-text').innerText = d.message;
-                document.getElementById('m-link-btn').innerText = d.btn_text;
+                document.getElementById('m-link-btn').innerText = d.btn_text || "Download Now";
                 document.getElementById('m-link-btn').onclick = () => { if(d.link) window.open(d.link, '_self'); };
-                screen.style.display = 'flex';
-            } else screen.style.display = 'none';
+                document.getElementById('m-mode-screen').style.display = 'flex';
+            } else document.getElementById('m-mode-screen').style.display = 'none';
         });
 
         db.ref('splash_ads').once('value', s => {
@@ -257,22 +254,24 @@ self.addEventListener('fetch', e => {
         }
 
         function card(m, dbv){ 
-            const d = m.duration || "HD";
-            const v = m.views || dbv || 0;
+            const d = m.duration || "HD"; const v = m.views || dbv || 0;
             return `<div class="v-card" onclick="openDetails('${m.id}')"><div style="position:relative;"><div class="v-badge-container"><span class="badge-views"><i class="fas fa-eye"></i> ${v}</span><span class="badge-duration">${d}</span></div><img src="${m.poster}" referrerpolicy="no-referrer" onerror="this.src='https://i.ibb.co/L6V2Sny/placeholder.png'"></div><span class="v-title">${m.title}</span></div>`; 
         }
         function ytCard(m){ 
-            const d = m.duration || "HD";
-            const v = m.views || 0;
+            const d = m.duration || "HD"; const v = m.views || 0;
             return `<div class="yt-card" onclick="openDetails('${m.id}')"><div class="yt-thumb-con"><div class="v-badge-container"><span class="badge-views"><i class="fas fa-eye"></i> ${v}</span><span class="badge-duration">${d}</span></div><img class="yt-thumb" src="${m.poster}" referrerpolicy="no-referrer" onerror="this.src='https://i.ibb.co/L6V2Sny/placeholder.png'"></div><div class="yt-info"><h3>${m.title}</h3></div></div>`; 
         }
 
+        // UPDATED: Show Poster when clicked
         function openDetails(id){
             cur = movies.find(m => m.id === id);
             document.getElementById('d-title').innerText = cur.title;
             document.getElementById('details').style.display = 'block';
             document.getElementById('details').scrollTo(0,0);
-            document.getElementById('player-con').innerHTML = ''; 
+            
+            // SHOW POSTER IN PLAYER AREA
+            document.getElementById('player-con').innerHTML = `<img src="${cur.poster}" style="width:100%; height:100%; object-fit:cover;" referrerpolicy="no-referrer">`; 
+            
             document.getElementById('play-btn').style.display = 'block';
             injectAd(); pushS('details');
             if(!watchedVids.includes(id)) { watchedVids.unshift(id); if(watchedVids.length > 100) watchedVids.pop(); localStorage.setItem('watched_vids', JSON.stringify(watchedVids)); }
@@ -285,12 +284,12 @@ self.addEventListener('fetch', e => {
         function startVideo(){
             if(cur.type==='premium' && !isPrem) return alert("VIP Access Required!");
             let u = cur.video.trim();
+            const pl = document.getElementById('player-con');
             if(u.includes('blogspot.com') || u.includes('github.io')){
                 document.getElementById('full-webview').style.display = 'flex';
                 document.getElementById('webview-con').innerHTML = `<iframe id="wb-frame" src="${u}" allow="autoplay; fullscreen"></iframe>`;
                 pushS('webview');
             } else {
-                const pl = document.getElementById('player-con');
                 if(u.includes('dropbox.com')) u = u.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0','') + '?raw=1';
                 if(u.includes('.mp4') || u.includes('dropbox') || u.includes('pixeldrain')){
                     if(u.includes('pixeldrain')) u = `https://pixeldrain.com/api/file/${u.split('/').pop()}`;
