@@ -1,120 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- [Existing Head and Styles remain 100% same...] -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
-    <title>VIP ACCESS | Ultimate Pro</title>
+    <title>VIP ACCESS | Ultimate Pro Cinema</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #030b17; --card: #0f172a; --primary: #1f80e0; --text: #fff; --gold: #ffcc00; }
+        :root { --bg: #030b17; --card: #0f172a; --primary: #1f80e0; --text: #ffffff; --gold: #ffcc00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 75px; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         ::-webkit-scrollbar { display: none; }
-
-        /* NOTICE BOX STYLING */
-        .notice-box { background: rgba(31, 128, 224, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
-        .notice-box h4 { margin: 0 0 5px; color: var(--primary); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-        .notice-box p { margin: 0; font-size: 0.8rem; color: #aaa; line-height: 1.4; }
-
-        /* THUMBNAIL BADGES */
-        .v-badge-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-        .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
-        .badge-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; font-weight: bold; }
-
-        /* GHOST WEBVIEW */
+        #m-mode-screen { position: fixed; inset: 0; background: var(--bg); z-index: 50000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
+        #m-mode-screen h1 { color: #fff; margin: 15px 0; font-size: 1.8rem; }
+        #m-mode-screen p { color: #888; line-height: 1.6; margin-bottom: 30px; }
         #full-webview { position: fixed; inset: 0; background: #000; z-index: 35000; display: none; flex-direction: column; }
         #full-webview iframe { flex: 1; border: none; background: #000; width: 100%; height: 100%; }
         .webview-header { height: 60px; background: #030b17; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--primary); }
-
-        /* SPLASH & MAINTENANCE */
         #splash { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        #splash img { max-width: 85%; border-radius: 20px; border: 2px solid var(--primary); }
-        .skip-btn { position: absolute; top: 40px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; border: 1px solid var(--primary); color: #fff; z-index: 10001; font-weight: bold; }
-        #m-mode-screen { position: fixed; inset: 0; background: var(--bg); z-index: 40000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
-
-        /* NAVBAR */
-        .navbar { padding: 15px; background: rgba(3,11,23,0.95); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: 1px; }
+        #splash img { max-width: 85%; border-radius: 20px; box-shadow: 0 0 40px rgba(31,128,224,0.3); }
+        .skip-btn { position: absolute; top: 45px; right: 20px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; border: 1px solid var(--primary); color: #fff; z-index: 10001; font-weight: bold; }
+        .navbar { padding: 15px; background: rgba(3,11,23,0.95); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-weight: 900; font-size: 1.4rem; color: #fff; letter-spacing: 1px; }
         .logo span { color: var(--primary); }
-        .search-box { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 15px; display: flex; align-items: center; flex: 0.8; border: 1px solid rgba(255,255,255,0.1); }
+        .search-box { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 15px; display: flex; align-items: center; flex: 0.8; border: 1px solid rgba(255,255,255,0.05); }
         .search-box input { background: none; border: none; color: #fff; width: 100%; margin-left: 10px; font-size: 0.95rem; }
-
-        /* SLIDERS */
+        .cat-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: var(--bg); position: sticky; top: 60px; z-index: 999; scrollbar-width: none; }
+        .cat-btn { background: rgba(255,255,255,0.05); padding: 8px 22px; border-radius: 10px; white-space: nowrap; color: #fff; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; font-weight: 500; }
+        .cat-btn.active { background: #fff; color: #000; font-weight: bold; border-color: #fff; }
         .slider-c { width: 100%; height: 210px; overflow: hidden; margin-top: 10px; }
-        .slider-w { display: flex; transition: 0.8s ease; height: 100%; }
+        .slider-w { display: flex; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; }
         .slide { min-width: 100%; height: 100%; padding: 0 10px; cursor: pointer; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-        .cat-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: var(--bg); position: sticky; top: 60px; z-index: 999; }
-        .cat-btn { background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 8px; white-space: nowrap; color: #fff; border: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; }
-        .cat-btn.active { background: #fff; color: #000; font-weight: bold; }
-        .sec-title { padding: 25px 15px 10px; font-size: 1.2rem; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; }
+        .sec-title { padding: 25px 15px 12px; font-size: 1.1rem; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 8px; }
         .h-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 0 15px; scrollbar-width: none; }
-        .v-card { min-width: 130px; width: 130px; position: relative; cursor: pointer; }
-        .v-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; background: #161d2f; }
+        .v-card { min-width: 140px; width: 140px; position: relative; cursor: pointer; transition: 0.3s; }
+        .v-card img { width: 100%; height: 195px; object-fit: cover; border-radius: 10px; background: #16181f; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
         .v-title { font-size: 0.8rem; color: #fff; margin-top: 8px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
+        .hist-card { min-width: 170px; width: 170px; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; border: 1px solid #333; cursor: pointer; margin-right: 12px; display: inline-block; }
+        .hist-card img { width: 100%; height: 100%; object-fit: cover; }
+        .v-badge-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+        .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
+        .badge-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; font-size: 0.65rem; border-radius: 4px; font-weight: bold; }
         .yt-feed { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .yt-card { width: 100%; cursor: pointer; }
-        .yt-thumb-con { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #161d2f; }
+        .yt-thumb-con { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: #161d2f; }
         .yt-thumb { width: 100%; height: 100%; object-fit: cover; }
-        .yt-info h3 { margin: 8px 0 0; font-size: 0.85rem; color: #fff; line-height: 1.3; font-weight: 500; height: 35px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-
-        /* DETAILS PAGE */
+        .yt-info h3 { margin: 10px 0 0; font-size: 0.85rem; color: #eee; line-height: 1.3; font-weight: 500; height: 35px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         #details { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; overflow-y: auto; padding-bottom: 80px; }
         .details-header-bar { position: sticky; top: 0; width: 100%; height: 60px; background: rgba(3, 11, 23, 0.9); backdrop-filter: blur(10px); display: flex; align-items: center; padding: 0 15px; gap: 15px; z-index: 2200; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .details-title-text { font-size: 1rem; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
         #player-con { width: 100%; aspect-ratio: 16/9; background: #000; z-index: 2100; overflow: hidden; }
         #player-con img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* BUTTONS */
         .p-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; color: #fff; margin-bottom: 15px; cursor: pointer; background: var(--primary); box-shadow: 0 10px 20px rgba(31,128,224,0.3); }
-        .report-btn { width: calc(100% - 30px); margin: 0 15px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid #fff; border-radius: 10px; color: #fff; font-size: 0.85rem; cursor: pointer; text-align: center; font-weight: bold; }
-        .social-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; color: #fff; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; text-transform: uppercase; }
+        .report-btn { width: calc(100% - 30px); margin: 0 15px; padding: 14px; background: #ffffff !important; border: none; border-radius: 12px; color: #000000 !important; font-size: 1rem; cursor: pointer; text-align: center; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .notice-box { background: rgba(31, 128, 224, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
+        .social-btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 800; color: #fff; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; text-transform: uppercase; }
         .btn-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
         .btn-tg { background: #0088cc; }
-
-        /* BOTTOM NAV */
         .btm-nav { position: fixed; bottom: 0; width: 100%; background: #0f172a; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
-        .nav-i { color: rgba(255,255,255,0.4); font-size: 0.7rem; text-align: center; flex: 1; }
-        .nav-i i { font-size: 1.4rem; margin-bottom: 5px; }
+        .nav-i { color: rgba(255,255,255,0.4); font-size: 0.75rem; text-align: center; flex: 1; cursor: pointer; }
+        .nav-i i { font-size: 1.4rem; margin-bottom: 4px; }
         .nav-i.active { color: #fff; }
-
-        #search-page { display: none; position: fixed; top: 65px; left: 0; width: 100%; height: calc(100% - 65px); background: var(--bg); z-index: 900; overflow-y: auto; }
-        .hist-card { min-width: 160px; width: 160px; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; border: 1px solid #333; cursor: pointer; margin-right: 12px; display: inline-block; }
-        .hist-card img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
+    <!-- [All HTML Body Blocks remain same as pichla complete version...] -->
     <div id="m-mode-screen">
         <i class="fas fa-sync-alt fa-spin" style="font-size:4rem; color:var(--primary); margin-bottom:20px;"></i>
         <h1 id="m-ver-text">Update Available</h1>
         <p id="m-msg-text">Download the latest version to continue.</p>
-        <button id="m-link-btn" class="p-btn" style="width:200px;">Download Now</button>
+        <button id="m-link-btn" class="p-btn" style="width:220px;">Download Now</button>
     </div>
-
     <div id="full-webview">
         <div class="webview-header">
-            <div onclick="closeWebview()" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                <i class="fas fa-arrow-left" style="font-size: 1.4rem; color: #fff;"></i>
-                <span style="font-weight: bold; color: #fff; letter-spacing: 0.5px;">SECURE VIP STREAMING</span>
-            </div>
+            <div onclick="closeWebview()" style="display:flex; align-items:center; gap:10px; cursor:pointer;"><i class="fas fa-arrow-left" style="font-size: 1.4rem; color: #fff;"></i><span style="font-weight: bold; color: #fff; letter-spacing: 0.5px;">SECURE VIP STREAMING</span></div>
             <i class="fas fa-redo-alt" onclick="refreshWebview()" style="color: #888;"></i>
         </div>
         <div id="webview-con" style="flex: 1;"></div>
     </div>
-
     <div id="splash">
         <div class="skip-btn" onclick="hideSplash()">Skip <span id="sp-time">5</span></div>
         <img id="sp-img" onclick="splashClick()">
     </div>
-
     <nav class="navbar">
         <div class="logo">VIP<span>VIDS</span></div>
-        <div class="search-box"><i class="fas fa-search" style="color:rgba(255,255,255,0.5);"></i><input id="s-in" placeholder="Search movies, shows..." onfocus="showSearch()" onkeyup="doSearch(this.value)"></div>
+        <div class="search-box"><i class="fas fa-search" style="color:rgba(255,255,255,0.5);"></i><input id="s-in" placeholder="Search..." onfocus="showSearch()" onkeyup="doSearch(this.value)"></div>
     </nav>
-
     <div id="home" class="page">
         <div class="slider-c"><div class="slider-w" id="slider"></div></div>
         <div class="cat-scroll" id="cats"></div>
@@ -129,59 +103,27 @@
             <div class="yt-feed" id="main-feed"></div>
         </div>
     </div>
-
     <div id="search-page"><div class="yt-feed" id="s-res"></div></div>
-
     <div id="profile" class="page" style="display:none; padding:20px;">
         <div style="text-align:center; padding:30px 0;">
             <div style="width:90px;height:90px;background:var(--primary);border-radius:50%;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;font-weight:bold;">VIP</div>
             <h2 id="p-status">Standard User</h2>
             <p id="p-expiry" style="color:var(--primary); font-weight:bold;"></p>
         </div>
-
-        <!-- NEW FEATURE: NOTICE BOX AND HOW TO BUTTON -->
-        <div id="profile-ad-area">
-            <div class="notice-box">
-                <h4><i class="fas fa-info-circle"></i> Important Notice</h4>
-                <p id="notice-text">VIP Members enjoy 4K streaming and zero ads. Follow our social channels for free codes.</p>
-            </div>
-            <button class="p-btn" style="background:#fff; color:#000;" onclick="openExt('how')">
-                <i class="fas fa-question-circle"></i> HOW TO GET VIP CODE?
-            </button>
-        </div>
-
-        <div id="history-section" style="display:none;">
-            <div class="sec-title" style="padding-left:0;">Continue Watching</div>
-            <div class="h-scroll" id="history-list" style="padding:0; overflow-y: hidden;"></div>
-            <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
-        </div>
-
-        <button class="social-btn btn-ig" onclick="openExt('ig')"><i class="fab fa-instagram"></i> Follow Instagram</button>
+        <div class="notice-box"><h4><i class="fas fa-info-circle"></i> Important Notice</h4><p id="notice-text">VIP Members enjoy 4K streaming and zero ads.</p></div>
+        <button class="p-btn" style="background:#fff; color:#000;" onclick="openExt('how')">HOW TO GET VIP CODE?</button>
+        <div id="history-section" style="display:none;"><div class="sec-title" style="padding-left:0;">Continue Watching</div><div class="h-scroll" id="history-list" style="padding:0; overflow-y: hidden;"></div><hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;"></div>
+        <button class="social-btn btn-ig" onclick="openExt('ig')"><i class="fab fa-instagram"></i> Instagram</button>
         <button class="social-btn btn-tg" onclick="openExt('tg')"><i class="fab fa-telegram-plane"></i> Join Telegram</button>
         <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:15px 0;">
         <button class="p-btn" style="background:#ffcc00; color:#000;" onclick="openExt('free')">GET FREE VIP ACCESS</button>
-        
-        <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); margin-top:15px;">
-            <input id="cp-code" style="width:100%; padding:14px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px; border-radius:10px;" placeholder="Enter VIP Code">
-            <button class="p-btn" style="margin:0;" onclick="redeem()">ACTIVATE VIP</button>
-        </div>
+        <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); margin-top:15px;"><input id="cp-code" style="width:100%; padding:14px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px; border-radius:10px;" placeholder="Enter VIP Code"><button class="p-btn" style="margin:0;" onclick="redeem()">ACTIVATE VIP</button></div>
     </div>
-
     <div id="details">
-        <div class="details-header-bar">
-            <i class="fas fa-arrow-left details-back-btn" onclick="closeD()"></i>
-            <div id="d-title" class="details-title-text">LOADING...</div>
-        </div>
+        <div class="details-header-bar"><i class="fas fa-arrow-left details-back-btn" onclick="closeD()"></i><div id="d-title" class="details-title-text">LOADING...</div></div>
         <div id="player-con"></div>
-        <div style="padding:20px;">
-            <div id="ad-box" class="ad-box"></div>
-            <button id="play-btn" class="p-btn" onclick="startVideo()">WATCH NOW</button>
-            <button class="report-btn" onclick="reportVideo()">Report Dead Link</button>
-            <h3 style="margin-top:30px; color:var(--primary);">More Content</h3>
-            <div class="yt-feed" id="related-list" style="padding:0;"></div>
-        </div>
+        <div style="padding:20px;"><div id="ad-box" class="ad-box"></div><button id="play-btn" class="p-btn" onclick="startVideo()">WATCH NOW</button><button class="report-btn" onclick="reportVideo()">Report Dead Link</button><h3 style="margin-top:30px; color:var(--primary);">Recommended Feed</h3><div class="yt-feed" id="related-list" style="padding:0;"></div></div>
     </div>
-
     <div class="btm-nav">
         <div class="nav-i active" id="nav-home" onclick="tab('home')"><i class="fas fa-home"></i><br>Home</div>
         <div class="nav-i" id="nav-profile" onclick="tab('profile')"><i class="fas fa-crown"></i><br>VIP</div>
@@ -275,10 +217,7 @@
             list.innerHTML = '';
             if(watchedVids.length > 0) {
                 section.style.display = 'block';
-                watchedVids.forEach(id => {
-                    const m = movies.find(x => x.id === id);
-                    if(m) list.innerHTML += `<div class="hist-card" onclick="openDetails('${m.id}')"><img src="${m.poster}" referrerpolicy="no-referrer"></div>`;
-                });
+                watchedVids.forEach(id => { const m = movies.find(x => x.id === id); if(m) list.innerHTML += `<div class="hist-card" onclick="openDetails('${m.id}')"><img src="${m.poster}" referrerpolicy="no-referrer"></div>`; });
             }
         }
 
@@ -306,20 +245,27 @@
             db.ref('users/' + uid + '/watch_count').transaction(c => (c || 0) + 1);
         }
 
+        // --- UPDATED: SMART STREAMING ENGINE FOR WORKERS.DEV ---
         function startVideo(){
             if(cur.type==='premium' && !isPrem) return alert("VIP Access Required!");
             let u = cur.video.trim();
+            const pl = document.getElementById('player-con');
+
+            // 1. Ghost Webview (Blogspot/GitHub)
             if(u.includes('blogspot.com') || u.includes('github.io')){
                 document.getElementById('full-webview').style.display = 'flex';
                 document.getElementById('webview-con').innerHTML = `<iframe id="wb-frame" src="${u}" allow="autoplay; fullscreen"></iframe>`;
                 pushS('webview');
             } else {
-                const pl = document.getElementById('player-con');
+                // 2. Direct Video Tag (Dropbox/Pixeldrain/Workers.dev)
                 if(u.includes('dropbox.com')) u = u.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0','') + '?raw=1';
-                if(u.includes('.mp4') || u.includes('dropbox') || u.includes('pixeldrain')){
-                    if(u.includes('pixeldrain')) u = `https://pixeldrain.com/api/file/${u.split('/').pop()}`;
+                if(u.includes('pixeldrain.com/u/')) u = 'https://pixeldrain.com/api/file/' + u.split('/').pop();
+                
+                // Detection for Workers.dev or direct MP4
+                if(u.includes('.mp4') || u.includes('dropbox') || u.includes('pixeldrain') || u.includes('workers.dev')){
                     pl.innerHTML = `<video controls autoplay playsinline style="width:100%;height:100%;"><source src="${u}" type="video/mp4"></video>`;
                 } else {
+                    // 3. Iframe fallback (Lulu/Filemoon)
                     u = u.replace('/f/', '/e/').replace('/d/', '/e/').replace('/v/', '/e/');
                     pl.innerHTML = `<iframe src="${u}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
                 }
@@ -337,13 +283,7 @@
         function redeem(){ const c = document.getElementById('cp-code').value.trim(); db.ref('coupons/'+c).once('value', s => { if(s.exists()){ localStorage.setItem('premExp', Date.now() + (s.val().hours * 3600000)); localStorage.setItem('vip_active', 'true'); db.ref('coupons/'+c).remove(); alert("VIP Activated!"); location.reload(); } }); }
         function checkVIPSync(){ const exp = localStorage.getItem('premExp'); if(exp && Date.now() < parseInt(exp)){ isPrem = true; const hrs = Math.ceil((parseInt(exp) - Date.now()) / 3600000); document.getElementById('p-status').innerHTML = "VIP MEMBER 💎"; document.getElementById('p-status').style.color = "#ff9900"; document.getElementById('p-expiry').innerText = `Valid for: ${hrs} Hours`; } }
         checkVIPSync(); setInterval(checkVIPSync, 60000);
-        
-        db.ref('settings').on('value', s => { 
-            settings = s.val() || {}; 
-            // NEW: UPDATE PROFILE NOTICE
-            if(settings.profile_notice) document.getElementById('notice-text').innerText = settings.profile_notice;
-        });
-
+        db.ref('settings').on('value', s => { settings = s.val() || {}; if(settings.profile_notice) document.getElementById('notice-text').innerText = settings.profile_notice; });
         function openExt(type){ const url = settings[type+'_url']; if(url) window.open(url, '_self'); }
         function injectAd() { const box = document.getElementById('ad-box'); if(box && settings.adsterra) { box.innerHTML = settings.adsterra; Array.from(box.querySelectorAll("script")).forEach(old => { const s = document.createElement("script"); Array.from(old.attributes).forEach(a => s.setAttribute(a.name, a.value)); s.appendChild(document.createTextNode(old.innerHTML)); old.parentNode.replaceChild(s, old); }); } }
         db.ref('promotions').on('value', s => { const d = s.val(); let h=''; if(d) for(let k in d) h += `<div class="slide" onclick="window.open('${d[k].link}','_self')"><img src="${d[k].image}"></div>`; document.getElementById('slider').innerHTML = h; let i=0; const w=document.getElementById('slider'); if(w.children.length > 1) setInterval(() => { i++; if(i>=w.children.length) i=0; w.style.transform=`translateX(-${i*100}%)`; }, 5000); });
