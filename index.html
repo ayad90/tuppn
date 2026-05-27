@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,8 +64,30 @@
         .nav-i { color: rgba(255,255,255,0.4); font-size: 0.75rem; text-align: center; flex: 1; cursor: pointer; }
         .nav-i i { font-size: 1.4rem; margin-bottom: 4px; }
         .nav-i.active { color: #fff; }
-    </style>
+    /* CIRCLE STORIES UI */
+.story-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 15px; background: var(--bg); scrollbar-width: none; }
+.story-item { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; }
+.story-circle { width: 65px; height: 65px; border-radius: 50%; padding: 2px; border: 2px solid var(--primary); background: #000; overflow: hidden; box-shadow: 0 0 10px rgba(31,128,224,0.3); }
+.story-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.story-name { font-size: 0.7rem; color: #fff; margin-top: 6px; font-weight: 500; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80px; }
+</style>
 </head>
+<!-- NEW FEATURE: 12-HOUR REWARD POPUP (ISOLATED) -->
+<div id="reward-unlock-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:99999; display:none; align-items:center; justify-content:center; padding:25px; backdrop-filter:blur(8px);">
+    <div style="background:#0f172a; padding:35px 25px; border-radius:24px; border:2px solid #ffcc00; text-align:center; max-width:380px; box-shadow:0 0 50px rgba(255,204,0,0.25); font-family: 'Segoe UI', sans-serif;">
+        <div style="background:#ffcc00; width:70px; height:70px; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; box-shadow: 0 0 20px rgba(255,204,0,0.4);">
+            <i class="fas fa-unlock-alt" style="font-size:2rem; color:#030b17;"></i>
+        </div>
+        <h2 style="color:#fff; margin:0 0 10px; font-size:1.5rem;">Free Access Unlock</h2>
+        <p style="color:#94a3b8; font-size:0.95rem; line-height:1.6; margin-bottom:30px;">
+            Hamari free service ko jaari rakhne ke liye niche diye button par click karein aur <b>12 ghante</b> ka free access payein.
+        </p>
+        <button id="reward-action-btn" style="background:#ffcc00; color:#030b17; width:100%; border:none; padding:16px; border-radius:12px; font-weight:900; font-size:1.1rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 15px rgba(255,204,0,0.3);">
+            🚀 Click Here Get Free Acsess 
+        </button>
+        <p style="color:#475569; font-size:0.75rem; margin-top:20px;">Clicking is mandatory to remove this screen.</p>
+    </div>
+</div>
 <body>
 
     <!-- [All HTML Body Blocks remain same as pichla complete version...] -->
@@ -86,12 +109,14 @@
         <img id="sp-img" onclick="splashClick()">
     </div>
     <nav class="navbar">
-        <div class="logo">VIP<span>VIDS</span></div>
+        <div class="logo">IXON<span>FUN</span></div>
         <div class="search-box"><i class="fas fa-search" style="color:rgba(255,255,255,0.5);"></i><input id="s-in" placeholder="Search..." onfocus="showSearch()" onkeyup="doSearch(this.value)"></div>
     </nav>
     <div id="home" class="page">
         <div class="slider-c"><div class="slider-w" id="slider"></div></div>
-        <div class="cat-scroll" id="cats"></div>
+        <!-- NEW: CIRCLE STORIES SECTION -->
+<!-- CATEGORY HATAKAR YE DALA -->
+<div class="story-scroll" id="stories-con"></div>
         <div id="home-content">
             <div class="sec-title">Premium Exclusive 💎</div>
             <div class="h-scroll" id="prem-list"></div>
@@ -132,6 +157,42 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
+/* --- NEW FEATURE: 12-HOUR REWARD POPUP LOGIC --- */
+(function() {
+    const REWARD_INTERVAL = 12 * 60 * 60 * 1000; // 12 Ghante
+    const REWARD_LINK = "https://www.effectivegatecpm.com/vwizjp7s?key=82eaaf585ed86a0767368d003252b739"; // Apka Direct Link
+    
+    function checkAndShowReward() {
+        const lastClick = localStorage.getItem('last_reward_click_time');
+        const now = Date.now();
+
+        // Check if 12 hours have passed or it's the first time
+        if (!lastClick || (now - lastClick) > REWARD_INTERVAL) {
+            const modal = document.getElementById('reward-unlock-modal');
+            const btn = document.getElementById('reward-action-btn');
+
+            if (modal) {
+                modal.style.display = 'flex'; // Show Popup
+                
+                btn.onclick = function() {
+                    // Save timestamp and close
+                    localStorage.setItem('last_reward_click_time', Date.now());
+                    modal.style.display = 'none';
+                    
+                    // Open Adsterra Direct Link
+                    window.open(REWARD_LINK, '_blank');
+                };
+            }
+        }
+    }
+
+    // Run check when app loads
+    window.addEventListener('load', () => {
+        // Small delay to ensure everything else is loaded
+        setTimeout(checkAndShowReward, 2000);
+    });
+})();
+/* --- END REWARD POPUP LOGIC --- */
         const cfg = { apiKey: "AIzaSyD-EuuxfvWJsKsYa_bxyJaSwk5iIW_tX-4", authDomain: "study-material-6ec20.firebaseapp.com", databaseURL: "https://study-material-6ec20-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "study-material-6ec20", storageBucket: "study-material-6ec20.firebasestorage.app", messagingSenderId: "231876217358", appId: "1:231876217358:web:7b37abcaf24c0414c44a5f" };
         firebase.initializeApp(cfg); const db=firebase.database();
 
@@ -287,6 +348,42 @@
         function openExt(type){ const url = settings[type+'_url']; if(url) window.open(url, '_self'); }
         function injectAd() { const box = document.getElementById('ad-box'); if(box && settings.adsterra) { box.innerHTML = settings.adsterra; Array.from(box.querySelectorAll("script")).forEach(old => { const s = document.createElement("script"); Array.from(old.attributes).forEach(a => s.setAttribute(a.name, a.value)); s.appendChild(document.createTextNode(old.innerHTML)); old.parentNode.replaceChild(s, old); }); } }
         db.ref('promotions').on('value', s => { const d = s.val(); let h=''; if(d) for(let k in d) h += `<div class="slide" onclick="window.open('${d[k].link}','_self')"><img src="${d[k].image}"></div>`; document.getElementById('slider').innerHTML = h; let i=0; const w=document.getElementById('slider'); if(w.children.length > 1) setInterval(() => { i++; if(i>=w.children.length) i=0; w.style.transform=`translateX(-${i*100}%)`; }, 5000); });
-    </script>
+   
+
+/* --- NEW FEATURE: CIRCLE STORIES (FIXED) --- */
+
+// 1. Purane renderCats error ko block karne ke liye empty function
+function renderCats() { return; } 
+
+// 2. Stories (Circles) load karne ka logic
+db.ref('collections').on('value', s => {
+    const d = s.val();
+    const con = document.getElementById('stories-con');
+    if(!con) return; // Error safety
+    con.innerHTML = '';
+    if(d) {
+        Object.keys(d).forEach(k => {
+            con.innerHTML += `
+            <div class="story-item" onclick="openCollection('${d[k].link}')" style="display: flex; flex-direction: column; align-items: center; min-width: 85px; cursor: pointer; padding: 5px;">
+                <div class="story-circle" style="width: 70px; height: 70px; border-radius: 50%; padding: 2px; border: 2.5px solid var(--primary); background: #000; overflow: hidden; box-shadow: 0 0 15px rgba(31,128,224,0.4);">
+                    <img src="${d[k].image}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" referrerpolicy="no-referrer">
+                </div>
+                <div class="story-name" style="font-size: 0.75rem; color: #fff; margin-top: 8px; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80px;">${d[k].name}</div>
+            </div>`;
+        });
+    }
+});
+
+// 3. Click par Webview kholne ka logic
+function openCollection(url) {
+    const wv = document.getElementById('full-webview');
+    const con = document.getElementById('webview-con');
+    if(wv && con) {
+        wv.style.display = 'flex';
+        con.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen"></iframe>`;
+        pushS('ghost');
+    }
+}
+ </script>
 </body>
 </html>
